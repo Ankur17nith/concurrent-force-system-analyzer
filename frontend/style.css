@@ -186,6 +186,7 @@ th {
 
 canvas {
   width: 100%;
+  aspect-ratio: 9 / 5;
   border: 1px solid var(--line);
   border-radius: 12px;
   background: linear-gradient(180deg, #fdfefe, #f6f9ff);
@@ -195,16 +196,46 @@ canvas {
   .layout {
     grid-template-columns: 1fr;
   }
+}
 
+@media (max-width: 600px) {
   .forceRow {
-    grid-template-columns: 1fr;
-    align-items: stretch;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "tag remove"
+      "mag ang";
     border: 1px solid var(--line);
     border-radius: 10px;
     padding: 0.6rem;
+    gap: 0.5rem;
   }
 
   .forceTag {
+    grid-area: tag;
+    align-self: center;
     padding-bottom: 0;
+  }
+
+  .forceRow > div:nth-child(2) {
+    grid-area: mag;
+  }
+
+  .forceRow > div:nth-child(3) {
+    grid-area: ang;
+  }
+
+  .removeBtn {
+    grid-area: remove;
+    justify-self: end;
+    align-self: start;
+    padding: 0.45rem 0.6rem;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .actions button {
+    width: 100%;
   }
 }

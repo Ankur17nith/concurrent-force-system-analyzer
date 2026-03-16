@@ -11,6 +11,8 @@ const calculateBtn = document.getElementById("calculateBtn");
 const API_BASE_URL = "https://concurrent-force-system-analyzer.onrender.com";
 
 let forceCount = 0;
+let lastComponentRows = null;
+let lastResultData = null;
 
 function addForceRow(defaultMagnitude = "", defaultAngle = "") {
   forceCount += 1;
@@ -166,21 +168,25 @@ function drawAxes() {
   ctx.lineTo(centerX, height);
   ctx.stroke();
 
+  const fontSize = Math.max(9, Math.round(width * 0.015));
   ctx.fillStyle = "#5f7187";
-  ctx.font = "14px Barlow";
-  ctx.fillText("+X", width - 35, centerY - 8);
-  ctx.fillText("-X", 10, centerY - 8);
-  ctx.fillText("+Y", centerX + 8, 16);
-  ctx.fillText("-Y", centerX + 8, height - 10);
+  ctx.font = `${fontSize}px Barlow`;
+  ctx.fillText("+X", width - fontSize * 2.5, centerY - 6);
+  ctx.fillText("-X", 6, centerY - 6);
+  ctx.fillText("+Y", centerX + 6, fontSize + 4);
+  ctx.fillText("-Y", centerX + 6, height - 6);
 }
 
 function drawArrow(startX, startY, endX, endY, color, label) {
-  const headLength = 10;
+  const w = vectorCanvas.width;
+  const headLength = Math.max(6, Math.round(w * 0.011));
+  const labelFont = Math.max(9, Math.round(w * 0.013));
+  const lineWidth = Math.max(1.5, Math.round(w * 0.003));
   const angle = Math.atan2(endY - startY, endX - startX);
 
   ctx.strokeStyle = color;
   ctx.fillStyle = color;
-  ctx.lineWidth = 2.5;
+  ctx.lineWidth = lineWidth;
 
   ctx.beginPath();
   ctx.moveTo(startX, startY);
@@ -194,11 +200,14 @@ function drawArrow(startX, startY, endX, endY, color, label) {
   ctx.closePath();
   ctx.fill();
 
-  ctx.font = "12px Barlow";
+  ctx.font = `${labelFont}px Barlow`;
   ctx.fillText(label, endX + 4, endY - 4);
 }
 
 function drawVectors(componentRows, resultData) {
+  lastComponentRows = componentRows;
+  lastResultData = resultData;
+
   drawAxes();
 
   const { width, height } = vectorCanvas;
@@ -209,7 +218,7 @@ function drawVectors(componentRows, resultData) {
   magnitudes.push(Math.abs(resultData.resultant));
 
   const maxMagnitude = Math.max(...magnitudes, 1);
-  const scale = 170 / maxMagnitude;
+  const scale = (Math.min(width / 2, height / 2) * 0.65) / maxMagnitude;
 
   componentRows.forEach((row) => {
     const endX = centerX + row.fx * scale;
@@ -277,9 +286,25 @@ async function calculate() {
   }
 }
 
+function resizeAndRedraw() {
+  const w = vectorCanvas.clientWidth;
+  if (w === 0) return;
+  const h = Math.round(w * 5 / 9);
+  if (vectorCanvas.width === w && vectorCanvas.height === h) return;
+  vectorCanvas.width = w;
+  vectorCanvas.height = h;
+  if (lastComponentRows && lastResultData) {
+    drawVectors(lastComponentRows, lastResultData);
+  } else {
+    drawAxes();
+  }
+}
+
+window.addEventListener("resize", resizeAndRedraw);
+
 addForceBtn.addEventListener("click", () => addForceRow());
 calculateBtn.addEventListener("click", calculate);
 
 addForceRow(50, 30);
 addForceRow(70, 120);
-drawAxes();
+requestAnimationFrame(resizeAndRedraw);

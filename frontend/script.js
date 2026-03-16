@@ -229,7 +229,7 @@ async function calculate() {
   const componentRows = computeComponents(forces);
   renderForceTable(componentRows);
 
-  const endpoint = API_BASE_URL.includes("YOUR_RENDER_BACKEND_URL")
+  const endpoint = API_BASE_URL.includes("https://concurrent-force-system-analyzer.onrender.com")
     ? "http://127.0.0.1:5000/calculate"
     : `${API_BASE_URL}/calculate`;
 

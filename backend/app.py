@@ -13,7 +13,7 @@ CORS(app)
 
 @app.get("/")
 def home():
-    return jsonify({"message": "Concurrent Force System Analyzer API is running."})
+    return "Backend running"
 
 
 @app.post("/calculate")

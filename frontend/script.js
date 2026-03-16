@@ -7,7 +7,7 @@ const ctx = vectorCanvas.getContext("2d");
 const addForceBtn = document.getElementById("addForceBtn");
 const calculateBtn = document.getElementById("calculateBtn");
 
-// Replace this with your Render service URL after deployment.
+// Set this to your Render backend URL (no trailing slash).
 const API_BASE_URL = "https://concurrent-force-system-analyzer.onrender.com";
 
 let forceCount = 0;
@@ -229,9 +229,9 @@ async function calculate() {
   const componentRows = computeComponents(forces);
   renderForceTable(componentRows);
 
-  const endpoint = API_BASE_URL.includes("https://concurrent-force-system-analyzer.onrender.com")
-    ? "http://127.0.0.1:5000/calculate"
-    : `${API_BASE_URL}/calculate`;
+  const endpoint = `${API_BASE_URL}/calculate`;
+  console.log("[ConcurrentForce] Request URL:", endpoint);
+  console.log("[ConcurrentForce] Request payload:", { forces });
 
   try {
     const response = await fetch(endpoint, {
@@ -240,16 +240,33 @@ async function calculate() {
       body: JSON.stringify({ forces }),
     });
 
+    console.log("[ConcurrentForce] Response status:", response.status, response.statusText);
+
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || "API request failed.");
+      let serverMessage = `API request failed (${response.status})`;
+      try {
+        const errorData = await response.json();
+        if (errorData && errorData.error) {
+          serverMessage = errorData.error;
+        }
+      } catch (_parseError) {
+        // Keep fallback message when backend does not return JSON.
+      }
+      throw new Error(serverMessage);
     }
 
     const resultData = await response.json();
+    console.log("[ConcurrentForce] Response data:", resultData);
     renderResult(resultData);
     drawVectors(componentRows, resultData);
   } catch (error) {
-    alert(`Calculation failed: ${error.message}`);
+    console.error("[ConcurrentForce] API error:", error);
+    const errorMessage = error instanceof Error ? error.message : "Unknown API error";
+    resultBox.innerHTML = `
+      <p><strong style="color:#d7263d;">Calculation failed</strong></p>
+      <p style="color:#d7263d;">${errorMessage}</p>
+      <p style="font-size:0.85rem;color:#5f7187;">Check that your Render backend URL is correct and the service is running.</p>
+    `;
   }
 }
 

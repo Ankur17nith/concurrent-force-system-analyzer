@@ -1,7 +1,9 @@
+import math
+import os
+from typing import cast
+
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-import math
-from typing import cast
 
 app = Flask(__name__)
 
@@ -86,4 +88,7 @@ def calculate():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    # Read PORT from the environment so this also works on Render when run directly.
+    # gunicorn (via the Procfile) also uses $PORT through --bind 0.0.0.0:$PORT.
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port, debug=False)

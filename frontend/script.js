@@ -129,20 +129,24 @@ function renderForceTable(componentRows) {
 }
 
 function renderResult(resultData) {
-  // Equilibrium force is opposite of resultant components.
-  // Feq_x = -sumFx and Feq_y = -sumFy
-  const eqX = -resultData.sumFx;
-  const eqY = -resultData.sumFy;
+  const resultantDirection =
+    resultData.angle === null
+      ? "Undefined (system in equilibrium)"
+      : `${Number(resultData.angle).toFixed(4)} deg`;
 
-  // Equilibrium direction is 180 degrees opposite to resultant direction.
-  const eqAngle = (resultData.angle + 180) % 360;
+  const equilibriumDirection =
+    resultData.equilibriumAngle === null
+      ? "Undefined (system in equilibrium)"
+      : `${Number(resultData.equilibriumAngle).toFixed(4)} deg`;
 
   resultBox.innerHTML = `
     <p><strong>&Sigma;Fx:</strong> ${resultData.sumFx.toFixed(4)} N</p>
     <p><strong>&Sigma;Fy:</strong> ${resultData.sumFy.toFixed(4)} N</p>
     <p><strong>Resultant R:</strong> ${resultData.resultant.toFixed(4)} N</p>
-    <p><strong>Direction &theta;:</strong> ${resultData.angle.toFixed(4)} deg</p>
-    <p><strong>Equilibrium Force:</strong> Fx = ${eqX.toFixed(4)} N, Fy = ${eqY.toFixed(4)} N, angle = ${eqAngle.toFixed(4)} deg</p>
+    <p><strong>Resultant Direction &theta;:</strong> ${resultantDirection}</p>
+    <p><strong>Equilibrium Force Magnitude:</strong> ${resultData.equilibriumMagnitude.toFixed(4)} N</p>
+    <p><strong>Equilibrium Force Direction:</strong> ${equilibriumDirection}</p>
+    <p><strong>Equilibrium Components:</strong> Fx = ${resultData.equilibriumFx.toFixed(4)} N, Fy = ${resultData.equilibriumFy.toFixed(4)} N</p>
   `;
 }
 
@@ -213,13 +217,16 @@ function drawVectors(componentRows, resultData) {
     drawArrow(centerX, centerY, endX, endY, "#1b74d1", row.label);
   });
 
-  const resultantEndX = centerX + resultData.sumFx * scale;
-  const resultantEndY = centerY - resultData.sumFy * scale;
-  drawArrow(centerX, centerY, resultantEndX, resultantEndY, "#d7263d", "R");
+  // Avoid drawing zero-length arrows when system is in equilibrium.
+  if (resultData.resultant > 0.0001) {
+    const resultantEndX = centerX + resultData.sumFx * scale;
+    const resultantEndY = centerY - resultData.sumFy * scale;
+    drawArrow(centerX, centerY, resultantEndX, resultantEndY, "#d7263d", "R");
 
-  const equilibriumEndX = centerX - resultData.sumFx * scale;
-  const equilibriumEndY = centerY + resultData.sumFy * scale;
-  drawArrow(centerX, centerY, equilibriumEndX, equilibriumEndY, "#24935a", "Feq");
+    const equilibriumEndX = centerX + resultData.equilibriumFx * scale;
+    const equilibriumEndY = centerY - resultData.equilibriumFy * scale;
+    drawArrow(centerX, centerY, equilibriumEndX, equilibriumEndY, "#24935a", "Feq");
+  }
 }
 
 async function calculate() {

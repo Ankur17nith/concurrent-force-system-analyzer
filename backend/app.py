@@ -7,6 +7,12 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 
+
+def normalize_angle_deg(angle_deg: float) -> float:
+    """Normalize an angle to the engineering convention range [0, 360)."""
+
+    return (angle_deg + 360.0) % 360.0
+
 # Enable CORS because frontend (Vercel) and backend (Render) run on different domains.
 CORS(app)
 
@@ -73,16 +79,47 @@ def calculate():
     # R = sqrt((sumFx)^2 + (sumFy)^2)
     resultant = math.sqrt((sum_fx ** 2) + (sum_fy ** 2))
 
+    # Small tolerance to identify static equilibrium despite floating-point noise.
+    tolerance = 1e-6
+
     # Resultant direction from component ratio with quadrant-safe atan2.
-    # theta = atan2(sumFy, sumFx)
-    angle = math.degrees(math.atan2(sum_fy, sum_fx))
+    # theta = atan2(sumFy, sumFx), normalized to [0, 360).
+    if resultant <= tolerance:
+        angle_deg: float | None = None
+        direction_text = "Undefined (system in equilibrium)"
+    else:
+        raw_angle_deg = math.degrees(math.atan2(sum_fy, sum_fx))
+        angle_deg = normalize_angle_deg(raw_angle_deg)
+        direction_text = f"{round(angle_deg, 4):.4f} deg"
+
+    # Equilibrium (equilibrant) force components are opposite to resultant components.
+    # Fx_eq = -sumFx, Fy_eq = -sumFy
+    if resultant <= tolerance:
+        eq_fx = 0.0
+        eq_fy = 0.0
+        eq_magnitude = 0.0
+        eq_angle_deg: float | None = None
+        eq_direction_text = "Undefined (system in equilibrium)"
+    else:
+        eq_fx = -sum_fx
+        eq_fy = -sum_fy
+        eq_magnitude = math.sqrt((eq_fx ** 2) + (eq_fy ** 2))
+        eq_raw_angle_deg = math.degrees(math.atan2(eq_fy, eq_fx))
+        eq_angle_deg = normalize_angle_deg(eq_raw_angle_deg)
+        eq_direction_text = f"{round(eq_angle_deg, 4):.4f} deg"
 
     return jsonify(
         {
             "sumFx": round(sum_fx, 4),
             "sumFy": round(sum_fy, 4),
             "resultant": round(resultant, 4),
-            "angle": round(angle, 4),
+            "angle": round(angle_deg, 4) if angle_deg is not None else None,
+            "directionText": direction_text,
+            "equilibriumFx": round(eq_fx, 4),
+            "equilibriumFy": round(eq_fy, 4),
+            "equilibriumMagnitude": round(eq_magnitude, 4),
+            "equilibriumAngle": round(eq_angle_deg, 4) if eq_angle_deg is not None else None,
+            "equilibriumDirectionText": eq_direction_text,
         }
     )
 

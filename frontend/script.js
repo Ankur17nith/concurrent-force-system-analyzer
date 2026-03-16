@@ -8,7 +8,7 @@ const addForceBtn = document.getElementById("addForceBtn");
 const calculateBtn = document.getElementById("calculateBtn");
 
 // Replace this with your Render service URL after deployment.
-const API_BASE_URL = "https://YOUR_RENDER_BACKEND_URL";
+const API_BASE_URL = "https://concurrent-force-system-analyzer.onrender.com";
 
 let forceCount = 0;
 

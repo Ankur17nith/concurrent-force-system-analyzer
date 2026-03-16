@@ -1,0 +1,621 @@
+/* =============================================================================
+   style.css  —  Concurrent Force System Analyzer
+   =============================================================================
+   Design theme: Dark engineering dashboard
+   Color palette:
+     Background dark  : #0f1117
+     Card surface     : #1a1d27
+     Accent blue      : #4fa3e0   ← individual forces
+     Accent red       : #e05555   ← resultant force
+     Accent green     : #3ec97e   ← equilibrant force
+     Accent yellow    : #f0c040   ← highlights / formulas
+     Text primary     : #e8eaf0
+     Text secondary   : #8890a8
+   ============================================================================= */
+
+/* ─── CSS Reset & Base ─────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 15px;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #0f1117;
+  color: #e8eaf0;
+  font-family: 'Inter', sans-serif;
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ─── Top Header Bar ───────────────────────────────────────────────────────── */
+.top-bar {
+  background: linear-gradient(135deg, #12151f 0%, #1c2035 100%);
+  border-bottom: 2px solid #2a2f45;
+  padding: 16px 24px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.5);
+}
+
+.top-bar-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.logo-block {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.logo-icon {
+  font-size: 2.4rem;
+  filter: drop-shadow(0 0 8px #4fa3e0aa);
+  animation: spin-slow 12s linear infinite;
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.app-title {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #4fa3e0;
+  letter-spacing: 0.03em;
+}
+
+.app-subtitle {
+  font-size: 0.75rem;
+  color: #8890a8;
+  margin-top: 2px;
+}
+
+/* ─── Buttons ──────────────────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 18px;
+  border: none;
+  border-radius: 6px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: filter 0.15s ease, transform 0.1s ease;
+}
+
+.btn:active { transform: scale(0.97); }
+
+.btn-theory {
+  background: linear-gradient(135deg, #2a3560, #3a4a80);
+  color: #b8c8f0;
+  border: 1px solid #4a5888;
+}
+.btn-theory:hover { filter: brightness(1.2); }
+
+.btn-add {
+  background: #1e3a52;
+  color: #4fa3e0;
+  border: 1px solid #2d5a7e;
+}
+.btn-add:hover { background: #254d6e; }
+
+.btn-calculate {
+  background: linear-gradient(135deg, #1a4a6e, #2060a0);
+  color: #ffffff;
+  border: 1px solid #3888d0;
+  padding: 10px 24px;
+  font-size: 0.95rem;
+  box-shadow: 0 0 12px #2060a055;
+}
+.btn-calculate:hover { filter: brightness(1.18); box-shadow: 0 0 20px #3888d088; }
+
+.btn-reset {
+  background: #2a1a1a;
+  color: #c07070;
+  border: 1px solid #5a2828;
+}
+.btn-reset:hover { background: #3a2020; }
+
+.btn-delete {
+  background: transparent;
+  color: #e05555;
+  border: 1px solid #5a2828;
+  padding: 5px 10px;
+  font-size: 0.8rem;
+  border-radius: 4px;
+}
+.btn-delete:hover { background: #3a2020; }
+
+.btn-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+/* ─── Main Grid Layout ─────────────────────────────────────────────────────── */
+.main-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  max-width: 1400px;
+  width: 100%;
+  margin: 20px auto;
+  padding: 0 20px 20px;
+}
+
+@media (max-width: 1050px) {
+  .main-grid { grid-template-columns: 1fr; }
+}
+
+.left-panel,
+.right-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ─── Cards ────────────────────────────────────────────────────────────────── */
+.card {
+  background: #1a1d27;
+  border: 1px solid #2a2f45;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 20px;
+  background: #14172280;
+  border-bottom: 1px solid #2a2f45;
+}
+
+.card-icon { font-size: 1.2rem; }
+
+.card-header h2 {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #c4cae8;
+  letter-spacing: 0.04em;
+}
+
+.card-body {
+  padding: 18px 20px;
+}
+
+/* ─── Info / helper text ───────────────────────────────────────────────────── */
+.info-text {
+  font-size: 0.83rem;
+  color: #8890a8;
+  margin-bottom: 14px;
+  line-height: 1.6;
+}
+
+.formula {
+  font-family: 'Roboto Mono', monospace;
+  color: #f0c040;
+  background: #25201000;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 0.85rem;
+}
+
+.placeholder-text {
+  color: #555a72;
+  font-style: italic;
+  text-align: center;
+  padding: 30px 0;
+}
+
+/* ─── Force Input Rows ─────────────────────────────────────────────────────── */
+.force-row {
+  display: grid;
+  /* label | magnitude | angle | delete-btn */
+  grid-template-columns: 60px 1fr 1fr auto;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 10px;
+  padding: 10px 14px;
+  background: #12151f;
+  border: 1px solid #252840;
+  border-radius: 8px;
+  transition: border-color 0.2s;
+}
+
+.force-row:hover { border-color: #4fa3e088; }
+
+.force-label {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #4fa3e0;
+  text-align: center;
+}
+
+/* Input fields */
+.force-row input {
+  width: 100%;
+  padding: 8px 12px;
+  background: #0f1117;
+  border: 1px solid #2a2f45;
+  border-radius: 5px;
+  color: #e8eaf0;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.9rem;
+  transition: border-color 0.2s;
+}
+
+.force-row input:focus {
+  outline: none;
+  border-color: #4fa3e0;
+  box-shadow: 0 0 0 2px #4fa3e030;
+}
+
+.force-row input::placeholder { color: #444a60; }
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.input-group label {
+  font-size: 0.7rem;
+  color: #8890a8;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ─── Force Table ──────────────────────────────────────────────────────────── */
+.table-wrapper {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  font-family: 'Roboto Mono', monospace;
+}
+
+thead th {
+  background: #12182a;
+  color: #8890a8;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  padding: 9px 12px;
+  text-align: right;
+  border-bottom: 1px solid #2a2f45;
+}
+
+thead th:first-child { text-align: center; }
+
+tbody tr {
+  border-bottom: 1px solid #1e2235;
+  transition: background 0.15s;
+}
+
+tbody tr:hover { background: #1e2235; }
+
+tbody td {
+  padding: 8px 12px;
+  text-align: right;
+  color: #c4cae8;
+}
+
+tbody td:first-child {
+  text-align: center;
+  font-weight: 700;
+  color: #4fa3e0;
+}
+
+.placeholder-cell {
+  text-align: center !important;
+  color: #555a72;
+  font-style: italic;
+  padding: 20px !important;
+}
+
+/* Table footer — summation row */
+tfoot td {
+  padding: 9px 12px;
+  border-top: 2px solid #2a2f45;
+}
+
+.sum-label {
+  text-align: right !important;
+  color: #8890a8;
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.sum-val {
+  text-align: right;
+  font-weight: 700;
+  color: #f0c040;
+  font-size: 0.92rem;
+}
+
+/* ─── Step-by-Step Output ─────────────────────────────────────────────────── */
+#steps-output {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.85rem;
+  line-height: 1.8;
+}
+
+.step-block {
+  margin-bottom: 20px;
+  padding: 14px 16px;
+  background: #12151f;
+  border-left: 3px solid #4fa3e0;
+  border-radius: 0 6px 6px 0;
+}
+
+.step-title {
+  font-weight: 700;
+  color: #4fa3e0;
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+  letter-spacing: 0.04em;
+}
+
+.step-formula {
+  color: #f0c040;
+  padding: 2px 0;
+}
+
+.step-value {
+  color: #e8eaf0;
+  padding: 1px 0;
+}
+
+.step-note {
+  color: #8890a8;
+  font-size: 0.78rem;
+  font-style: italic;
+  margin-top: 4px;
+}
+
+/* Resultant block */
+.step-block.resultant {
+  border-left-color: #e05555;
+}
+.step-block.resultant .step-title { color: #e05555; }
+
+/* Equilibrium block */
+.step-block.equilibrium {
+  border-left-color: #3ec97e;
+}
+.step-block.equilibrium .step-title { color: #3ec97e; }
+
+/* Status badges */
+.badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  margin-top: 6px;
+}
+
+.badge-equilibrium {
+  background: #0a2e1a;
+  color: #3ec97e;
+  border: 1px solid #2a7a50;
+}
+
+.badge-not-equilibrium {
+  background: #2e1a0a;
+  color: #f0a030;
+  border: 1px solid #7a5020;
+}
+
+/* ─── Canvas Vector Diagram ───────────────────────────────────────────────── */
+.canvas-container {
+  background: #0a0d14;
+  border: 1px solid #2a2f45;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+#force-canvas {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.legend-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.78rem;
+  color: #8890a8;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.legend-dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.canvas-note {
+  font-size: 0.75rem;
+  color: #555a72;
+  text-align: center;
+  margin-top: 8px;
+  font-style: italic;
+}
+
+/* ─── Theory Modal ─────────────────────────────────────────────────────────── */
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  z-index: 200;
+}
+
+.overlay.active { display: block; }
+
+.modal {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.95);
+  width: min(720px, 95vw);
+  max-height: 85vh;
+  overflow-y: auto;
+  background: #1a1d27;
+  border: 1px solid #3a3f58;
+  border-radius: 12px;
+  z-index: 300;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  opacity: 0;
+}
+
+.modal.active {
+  display: block;
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px;
+  background: #14172280;
+  border-bottom: 1px solid #2a2f45;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.modal-header h2 {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 1rem;
+  color: #b8c8f0;
+}
+
+.modal-close {
+  background: none;
+  border: 1px solid #3a3f58;
+  color: #8890a8;
+  font-size: 1.1rem;
+  cursor: pointer;
+  border-radius: 6px;
+  padding: 4px 10px;
+  transition: background 0.15s;
+}
+
+.modal-close:hover { background: #2a2f45; color: #e8eaf0; }
+
+.modal-body { padding: 24px; }
+
+.theory-section {
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #1e2235;
+}
+
+.theory-section:last-child { border-bottom: none; }
+
+.theory-section h3 {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.92rem;
+  color: #4fa3e0;
+  margin-bottom: 10px;
+  letter-spacing: 0.03em;
+}
+
+.theory-section p {
+  font-size: 0.88rem;
+  color: #c4cae8;
+  line-height: 1.7;
+  margin-bottom: 8px;
+}
+
+.theory-section ul {
+  padding-left: 20px;
+  margin-top: 8px;
+}
+
+.theory-section li {
+  font-size: 0.86rem;
+  color: #c4cae8;
+  line-height: 1.8;
+}
+
+.formula-block {
+  background: #0f1117;
+  border: 1px solid #2a2f45;
+  border-left: 3px solid #f0c040;
+  border-radius: 0 6px 6px 0;
+  padding: 12px 16px;
+  margin: 12px 0;
+}
+
+.formula-line {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.9rem;
+  color: #f0c040;
+  line-height: 2;
+}
+
+/* ─── Footer ───────────────────────────────────────────────────────────────── */
+.app-footer {
+  text-align: center;
+  padding: 14px 20px;
+  font-size: 0.75rem;
+  color: #3a3f58;
+  border-top: 1px solid #1e2235;
+  background: #0d0f18;
+}
+
+/* ─── Scrollbar styling (Webkit) ───────────────────────────────────────────── */
+::-webkit-scrollbar              { width: 6px; height: 6px; }
+::-webkit-scrollbar-track        { background: #0f1117; }
+::-webkit-scrollbar-thumb        { background: #2a2f45; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover  { background: #3a3f58; }
+
+/* ─── Utility ──────────────────────────────────────────────────────────────── */
+.text-blue  { color: #4fa3e0; }
+.text-red   { color: #e05555; }
+.text-green { color: #3ec97e; }
+.text-gold  { color: #f0c040; }

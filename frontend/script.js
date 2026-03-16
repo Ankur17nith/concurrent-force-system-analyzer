@@ -7,9 +7,7 @@ const ctx = vectorCanvas.getContext("2d");
 const addForceBtn = document.getElementById("addForceBtn");
 const calculateBtn = document.getElementById("calculateBtn");
 
-// ─── API endpoint configuration ──────────────────────────────────────────────
-// Update API_BASE_URL to your actual Render service URL before deploying.
-// No trailing slash.
+// Replace this with your Render service URL after deployment.
 const API_BASE_URL = "https://concurrent-force-system-analyzer.onrender.com";
 
 let forceCount = 0;
@@ -224,31 +222,16 @@ function drawVectors(componentRows, resultData) {
   drawArrow(centerX, centerY, equilibriumEndX, equilibriumEndY, "#24935a", "Feq");
 }
 
-// ─── showError — renders an error message inside the result panel ─────────────
-// Avoids opaque browser alerts; professor / marker can see exactly what failed.
-function showError(message) {
-  console.error("[ConcurrentForce] API error:", message);
-  resultBox.innerHTML = `
-    <p style="color:#d7263d;font-weight:600;">&#x26A0; Error</p>
-    <p style="color:#c0392b;">${message}</p>
-    <p style="font-size:0.82rem;color:#888;">Check that the Render backend is running and <code>API_BASE_URL</code> is correct.</p>
-  `;
-}
-
 async function calculate() {
   const forces = getForcesFromInputs();
   if (!forces) return;
 
-  // Show a loading state while the request is in flight.
-  resultBox.innerHTML = `<p style="color:#8890a8;">&#x23F3; Calculating&hellip;</p>`;
-
   const componentRows = computeComponents(forces);
   renderForceTable(componentRows);
 
-  // Always use the configured Render URL — the localhost fallback is removed to
-  // prevent silent failures in production where it would still call localhost.
-  const endpoint = `${API_BASE_URL}/calculate`;
-  console.log("[ConcurrentForce] POST", endpoint, { forces });
+  const endpoint = API_BASE_URL.includes("YOUR_RENDER_BACKEND_URL")
+    ? "http://127.0.0.1:5000/calculate"
+    : `${API_BASE_URL}/calculate`;
 
   try {
     const response = await fetch(endpoint, {
@@ -258,25 +241,15 @@ async function calculate() {
     });
 
     if (!response.ok) {
-      // Try to extract the server-side error message from JSON.
-      let serverMessage = `HTTP ${response.status} ${response.statusText}`;
-      try {
-        const errorData = await response.json();
-        if (errorData.error) serverMessage = errorData.error;
-      } catch (_) {
-        // Response body was not JSON — keep the HTTP status message.
-      }
-      throw new Error(serverMessage);
+      const errorData = await response.json();
+      throw new Error(errorData.error || "API request failed.");
     }
 
     const resultData = await response.json();
-    console.log("[ConcurrentForce] Result:", resultData);
     renderResult(resultData);
     drawVectors(componentRows, resultData);
   } catch (error) {
-    // Network errors (e.g. CORS block, DNS failure, backend not running)
-    // have error.message = "Failed to fetch".
-    showError(error.message);
+    alert(`Calculation failed: ${error.message}`);
   }
 }
 

@@ -1,74 +1,143 @@
+<!-- Next line declares HTML5 document type. -->
 <!DOCTYPE html>
+<!-- Next line starts the root HTML element with English language. -->
 <html lang="en">
+<!-- Next line starts head section for metadata and linked assets. -->
 <head>
+  <!-- Next line sets UTF-8 text encoding. -->
   <meta charset="UTF-8" />
+  <!-- Next line makes layout responsive on phones and tablets. -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Next line sets browser tab title. -->
   <title>Concurrent Force System Analyzer</title>
+  <!-- Next line preconnects to Google Fonts main host for faster loading. -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <!-- Next line preconnects to Google Fonts static host for faster loading. -->
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- Next line loads project font families from Google Fonts. -->
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+  <!-- Next line links local CSS file for page styling. -->
   <link rel="stylesheet" href="style.css" />
+<!-- Next line closes head section. -->
 </head>
+<!-- Next line starts the visible page body. -->
 <body>
+  <!-- Next line starts the top hero header area. -->
   <header class="hero">
+    <!-- Next line shows the main application heading. -->
     <h1>Concurrent Force System Analyzer</h1>
+    <!-- Next line shows a short subtitle under the heading. -->
     <p>Mechanical Engineering Academic Tool</p>
+  <!-- Next line closes hero header area. -->
   </header>
 
+  <!-- Next line starts main content grid layout. -->
   <main class="layout">
+    <!-- Next line starts card for force input controls. -->
     <section class="card">
+      <!-- Next line shows force input section title. -->
       <h2>Force Inputs</h2>
+      <!-- Next line marks dynamic container where JS adds force rows. -->
       <div id="forceInputs"></div>
+      <!-- Next line starts action button row. -->
       <div class="actions">
+        <!-- Next line adds button to insert another force row. -->
         <button id="addForceBtn" type="button">Add Force</button>
+        <!-- Next line adds button to run calculations. -->
         <button id="calculateBtn" type="button">Calculate</button>
+      <!-- Next line closes action button row. -->
       </div>
+    <!-- Next line closes force input card. -->
     </section>
 
+    <!-- Next line starts card for resolved force component table. -->
     <section class="card">
+      <!-- Next line shows force table section title. -->
       <h2>Force Table</h2>
+      <!-- Next line wraps table so it can scroll on small screens. -->
       <div class="tableWrap">
+        <!-- Next line starts force component data table. -->
         <table>
+          <!-- Next line starts table header area. -->
           <thead>
+            <!-- Next line starts table header row. -->
             <tr>
+              <!-- Next line labels first column for force name. -->
               <th>Force</th>
+              <!-- Next line labels second column for force magnitude. -->
               <th>Magnitude (N)</th>
+              <!-- Next line labels third column for angle in degrees. -->
               <th>Angle (deg)</th>
+              <!-- Next line labels fourth column for x component. -->
               <th>Fx (N)</th>
+              <!-- Next line labels fifth column for y component. -->
               <th>Fy (N)</th>
+            <!-- Next line closes table header row. -->
             </tr>
+          <!-- Next line closes table header area. -->
           </thead>
+          <!-- Next line starts table body that JavaScript updates. -->
           <tbody id="forceTableBody">
+            <!-- Next line starts placeholder row before first calculation. -->
             <tr>
+              <!-- Next line shows placeholder message across all columns. -->
               <td colspan="5" class="empty">Add forces and click calculate.</td>
+            <!-- Next line closes placeholder row. -->
             </tr>
+          <!-- Next line closes table body. -->
           </tbody>
+        <!-- Next line closes force component table. -->
         </table>
+      <!-- Next line closes table wrapper. -->
       </div>
+    <!-- Next line closes force table card. -->
     </section>
 
+    <!-- Next line starts card for resultant and equilibrium outputs. -->
     <section class="card">
+      <!-- Next line shows results section title. -->
       <h2>Resultant Force</h2>
+      <!-- Next line starts result box where JS prints final values. -->
       <div id="resultBox" class="resultBox">
+        <!-- Next line shows placeholder for Sigma Fx. -->
         <p><strong>&Sigma;Fx:</strong> -</p>
+        <!-- Next line shows placeholder for Sigma Fy. -->
         <p><strong>&Sigma;Fy:</strong> -</p>
+        <!-- Next line shows placeholder for resultant magnitude. -->
         <p><strong>Resultant R:</strong> -</p>
+        <!-- Next line shows placeholder for resultant direction. -->
         <p><strong>Direction &theta;:</strong> -</p>
+        <!-- Next line shows placeholder for equilibrium force summary. -->
         <p><strong>Equilibrium Force:</strong> -</p>
+      <!-- Next line closes result box. -->
       </div>
+    <!-- Next line closes resultant card. -->
     </section>
 
+    <!-- Next line starts wide card for vector diagram canvas. -->
     <section class="card wide">
+      <!-- Next line shows vector diagram section title. -->
       <h2>Vector Diagram</h2>
+      <!-- Next line starts legend showing color meaning. -->
       <div class="legend">
+        <!-- Next line labels blue vectors as individual forces. -->
         <span><i class="dot blue"></i> Individual forces</span>
+        <!-- Next line labels red vector as resultant force. -->
         <span><i class="dot red"></i> Resultant</span>
+        <!-- Next line labels green vector as equilibrium force. -->
         <span><i class="dot green"></i> Equilibrium force</span>
+      <!-- Next line closes legend container. -->
       </div>
+      <!-- Next line creates canvas where vectors are drawn. -->
       <canvas id="vectorCanvas" width="900" height="500"></canvas>
+    <!-- Next line closes vector diagram card. -->
     </section>
+  <!-- Next line closes main content layout. -->
   </main>
 
+  <!-- Next line loads JavaScript logic file. -->
   <script src="script.js"></script>
+<!-- Next line closes body section. -->
 </body>
+<!-- Next line closes root HTML element. -->
 </html>

@@ -1,44 +1,63 @@
+/* Next block defines reusable color variables for the whole page. */
 :root {
+  /* Next line sets global background color. */
   --bg: #f1f5fb;
+  /* Next line sets card background color. */
   --card: #ffffff;
+  /* Next line sets main text color. */
   --ink: #1e2a3a;
+  /* Next line sets secondary muted text color. */
   --muted: #5f7187;
+  /* Next line sets border line color. */
   --line: #d9e3ef;
+  /* Next line sets blue accent color. */
   --blue: #1b74d1;
+  /* Next line sets red accent color. */
   --red: #d7263d;
+  /* Next line sets green accent color. */
   --green: #24935a;
 }
 
+/* Next block makes element sizing include padding and border. */
 * {
   box-sizing: border-box;
 }
 
+/* Next block styles the page body and background. */
 body {
+  /* Next line removes default body margin. */
   margin: 0;
+  /* Next line sets primary font family. */
   font-family: "Barlow", sans-serif;
+  /* Next line applies main text color variable. */
   color: var(--ink);
+  /* Next lines create layered gradient background with base color. */
   background:
     radial-gradient(circle at 10% 10%, #d9e9ff 0%, transparent 40%),
     radial-gradient(circle at 90% 90%, #e7f8ef 0%, transparent 35%),
     var(--bg);
 }
 
+/* Next block styles the top hero section. */
 .hero {
   padding: 2rem 1rem 1.5rem;
   text-align: center;
 }
 
+/* Next block styles the main title text in hero section. */
 .hero h1 {
   margin: 0;
   font-family: "Space Grotesk", sans-serif;
   font-size: clamp(1.6rem, 3vw, 2.3rem);
 }
 
+/* Next block styles subtitle text under hero title. */
 .hero p {
   margin: 0.4rem 0 0;
   color: var(--muted);
 }
 
+/* Next block creates two-column layout for desktop screens. */
 .layout {
   width: min(1100px, 94%);
   margin: 0 auto 2rem;
@@ -47,6 +66,7 @@ body {
   gap: 1rem;
 }
 
+/* Next block styles each white content card. */
 .card {
   background: var(--card);
   border: 1px solid var(--line);
@@ -55,16 +75,19 @@ body {
   box-shadow: 0 8px 24px rgba(24, 44, 74, 0.08);
 }
 
+/* Next block styles card heading text. */
 .card h2 {
   margin: 0 0 0.8rem;
   font-family: "Space Grotesk", sans-serif;
   font-size: 1.1rem;
 }
 
+/* Next block makes a card span full grid width. */
 .wide {
   grid-column: 1 / -1;
 }
 
+/* Next block styles one force input row. */
 .forceRow {
   display: grid;
   grid-template-columns: 70px 1fr 1fr auto;
@@ -73,12 +96,14 @@ body {
   margin-bottom: 0.6rem;
 }
 
+/* Next block styles force label badge (F1, F2, etc.). */
 .forceTag {
   font-weight: 700;
   color: var(--blue);
   padding-bottom: 0.35rem;
 }
 
+/* Next block styles all form labels. */
 label {
   display: block;
   font-size: 0.85rem;
@@ -86,6 +111,7 @@ label {
   margin-bottom: 0.2rem;
 }
 
+/* Next block styles all input boxes. */
 input {
   width: 100%;
   padding: 0.55rem;
@@ -94,6 +120,7 @@ input {
   font: inherit;
 }
 
+/* Next block defines shared style for remove and action buttons. */
 .removeBtn,
 .actions button {
   border: 0;
@@ -102,40 +129,48 @@ input {
   font: inherit;
 }
 
+/* Next block styles remove button in each force row. */
 .removeBtn {
   padding: 0.55rem 0.7rem;
   background: #ffe1e6;
   color: #9f1f32;
 }
 
+/* Next block styles action button container. */
 .actions {
   display: flex;
   gap: 0.6rem;
   margin-top: 0.7rem;
 }
 
+/* Next block styles action buttons text and spacing. */
 .actions button {
   padding: 0.6rem 0.9rem;
   color: #fff;
 }
 
+/* Next block styles Add Force button color. */
 #addForceBtn {
   background: var(--blue);
 }
 
+/* Next block styles Calculate button color. */
 #calculateBtn {
   background: #0e4f95;
 }
 
+/* Next block allows force table horizontal scroll on small screens. */
 .tableWrap {
   overflow-x: auto;
 }
 
+/* Next block styles the table width and border behavior. */
 table {
   width: 100%;
   border-collapse: collapse;
 }
 
+/* Next block styles table cells and headers. */
 th,
 td {
   border-bottom: 1px solid var(--line);
@@ -143,19 +178,23 @@ td {
   text-align: center;
 }
 
+/* Next block styles table header text. */
 th {
   font-size: 0.86rem;
   color: var(--muted);
 }
 
+/* Next block styles placeholder text in empty table row. */
 .empty {
   color: var(--muted);
 }
 
+/* Next block controls spacing of lines in result panel. */
 .resultBox p {
   margin: 0.35rem 0;
 }
 
+/* Next block styles legend row for vector colors. */
 .legend {
   display: flex;
   flex-wrap: wrap;
@@ -164,6 +203,7 @@ th {
   color: var(--muted);
 }
 
+/* Next block styles little circular color dots in legend. */
 .dot {
   display: inline-block;
   width: 10px;
@@ -172,18 +212,22 @@ th {
   margin-right: 0.3rem;
 }
 
+/* Next block sets blue legend dot color. */
 .dot.blue {
   background: var(--blue);
 }
 
+/* Next block sets red legend dot color. */
 .dot.red {
   background: var(--red);
 }
 
+/* Next block sets green legend dot color. */
 .dot.green {
   background: var(--green);
 }
 
+/* Next block styles vector canvas border and background. */
 canvas {
   width: 100%;
   aspect-ratio: 9 / 5;
@@ -192,12 +236,14 @@ canvas {
   background: linear-gradient(180deg, #fdfefe, #f6f9ff);
 }
 
+/* Next block switches layout to one column on medium screens. */
 @media (max-width: 900px) {
   .layout {
     grid-template-columns: 1fr;
   }
 }
 
+/* Next block makes force row and buttons mobile friendly on small screens. */
 @media (max-width: 600px) {
   .forceRow {
     grid-template-columns: 1fr 1fr;

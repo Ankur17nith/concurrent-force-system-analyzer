@@ -1,3 +1,6 @@
+# Next line installs Flask framework for backend API routes.
 flask>=3.0.3
+# Next line installs Gunicorn server used by Render in production.
 gunicorn>=22.0.0
+# Next line installs CORS support so frontend can call backend from another domain.
 flask-cors>=5.0.0
